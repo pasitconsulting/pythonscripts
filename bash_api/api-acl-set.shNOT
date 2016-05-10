@@ -12,10 +12,12 @@ date=`date -u +"%a, %d %b %Y %H:%M:%S GMT"`
 subtenantid="0d5f8c93737d4e82b95254083f30594d"
 
 #x-emc-useracl="$subtenantid=FULL_CONTROL" 
-acl="marko=FULL_CONTROL" 
+acl="jim=FULL_CONTROL" 
+groupacl="other=NONE" 
 
 # Choose the file to upload
-file_to_add_acl_to=/opt/postgresqlbkdumps/postgresbackup050516_1115
+file_to_add_acl_to="/opt/postgresqlbkdumps/postgresbackup090516_1428"
+#file_to_add_acl_to="/etc/passwd"
 
 # Choose the Atmos directory
 atmos_dir="/postgres/"
@@ -26,15 +28,23 @@ atmos_path="/rest/namespace${atmos_dir}$filename?${acl}"
 
 contentType="application/octet-stream"
 
-signstr="POST\n${contentType}\n\n\n${atmos_path}\nx-emc-date:${date}"
+#signstr="POST\n   \
+#         ${contentType}\n     \
+#                       \n     \
+#                       \n     \
+#         ${atmos_path} \n     \
+#         x-emc-date:${date}  \n   \
+#         x-emc-uid:${uid}"
+signstr="POST\n${contentType}\n\n\n${atmos_path}\nx-emc-date:${date}\nx-emc-uid:${uid}\nx-emc-useracl:${acl}\nx-emc-groupacl:${groupacl}"
+
 sig=$(python -c "import base64, hmac, sha; print base64.b64encode(hmac.new(base64.b64decode(\"$key\"), \"$signstr\", sha).digest())")
 
 curl -i -X POST  \
-     -H "accept:*/*"   \
      -H "Content-Type:$contentType"   \
      -H "x-emc-date:$date"     \
      -H "x-emc-uid:$uid"    \
      -H "x-emc-signature:$sig"    \
      -H "x-emc-useracl:$acl"  \
+     -H "x-emc-groupacl:$groupacl"  \
      --data-binary @${file_to_add_acl_to} ${endpoint}${atmos_path}
 
