@@ -1,21 +1,36 @@
+#!/bin/bash -x
+
+################################
+#read an object on object store
+################################
+
 # Set up uid, key, and endpoint
 uid="0d5f8c93737d4e82b95254083f30594d/A6352552154f0b04a38c"
 key="9+DFQyvChotHSCFrjJaWLAYh/A8="
 endpoint="https://cas00003.skyscapecloud.com"
 
-# Choose the file to read
-file_to_read=/postgres/postgresbackup090516_1143
+
+
+
+
+#force pass in of 1 runtime parameter
+if [ $# -ne 1 ]
+then
+  echo "i need a filename passing in as a runtime parameter"
+  exit
+else
+  file_to_read="$1"
+fi
+
 
 # Choose the Atmos directory to upload the file
 atmos_dir="/postgres/"
 
+
 # Build and send the Atmos request
 filename=`basename $file_to_read`
 
-
 atmos_path="/rest/namespace${atmos_dir}$filename"
-
-
 
 contentType="text/plain"
 

@@ -1,4 +1,7 @@
-#!/bin/bash 
+#!/bin/bash -x
+################
+#LIST TAGS
+################
 # Set up uid, key, and endpoint
 uid="0d5f8c93737d4e82b95254083f30594d/A6352552154f0b04a38c"
 key="9+DFQyvChotHSCFrjJaWLAYh/A8="
@@ -15,7 +18,7 @@ atmos_dir="/postgres/"
 
 # Build and send the Atmos request
 filename=`basename $file_to_upload`
-atmos_path="/rest/namespace${atmos_dir}$filename?info"
+atmos_path="/rest/namespace?listabletags"
 
 contentType="application/octet-stream"
 
@@ -28,3 +31,5 @@ curl -i -X GET  \
      -H "x-emc-uid:$uid"    \
      -H "x-emc-signature:$sig"    \
      --data-binary @${file_to_upload} ${endpoint}${atmos_path}
+
+

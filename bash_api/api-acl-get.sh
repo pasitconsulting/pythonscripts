@@ -4,8 +4,10 @@ uid="0d5f8c93737d4e82b95254083f30594d/A6352552154f0b04a38c"
 key="9+DFQyvChotHSCFrjJaWLAYh/A8="
 endpoint="https://cas00003.skyscapecloud.com"
 
-# Choose the file to read
-file_to_read=/opt/postgresqlbkdumps/postgresbackup050516_1115
+# Choose the file to upload
+pgbackupdir="/opt/postgresqlbkdumps"
+latestpgbackup="`ls -at $pgbackupdir | head -n 1`"
+file_to_read="$pgbackupdir/$latestpgbackup"
 
 # Choose the Atmos directory to upload the file
 atmos_dir="/postgres/"
